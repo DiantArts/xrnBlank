@@ -4,9 +4,11 @@
 
 runProgram() (
     if [ ${buildType} = Debug ]; then
-        valgrind ./${binaryPath} || exit $?
+        valgrind ./${binaryPath}
+        echo "Exit code: $?"
     else
-        ./${binaryPath} || exit $?
+        ./${binaryPath}
+        echo "Exit code: $?"
     fi
 )
 
