@@ -1,4 +1,5 @@
 .build/
+build/
 .cache/
 .obj*/
 .dep*/
@@ -18,4 +19,5 @@ _*
 cccontrolReminder
 TODO
 compile_commands.json
+CMakeUserPresets.json
 .logs/

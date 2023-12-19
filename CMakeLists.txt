@@ -12,15 +12,15 @@ SET(XRN_ERROR_LIMIT 1)
 
 # dependencies
 set(XRN_PERSONAL_DEPENDENCIES xrnLog) # include other xrn projects
-set(XRN_LIBRARIES_REQUIRED spdlog/1.10.0)
+# set(XRN_LIBRARIES_REQUIRED spdlog/1.10.0)
 set(XRN_LIBRARIES_REQUIREMENTS spdlog fmt) # find_package
-set(XRN_LIBRARIES_DEPENDENCIES CONAN_PKG::spdlog CONAN_PKG::fmt) # target_link_libraries
+set(XRN_LIBRARIES_DEPENDENCIES spdlog::spdlog fmt::fmt) # target_link_libraries
 set(XRN_LIBRARIES_HEADERS spdlog fmt) # include_directories()
 
-set(SPDLOG_BUILD_SHARED OFF)
-set(SPDLOG_FMT_EXTERNAL ON)
-set(SPDLOG_BUILD_EXAMPLE OFF)
-set(SPDLOG_BUILD_TESTS OFF)
+# set(SPDLOG_BUILD_SHARED OFF)
+# set(SPDLOG_FMT_EXTERNAL ON)
+# set(SPDLOG_BUILD_EXAMPLE OFF)
+# set(SPDLOG_BUILD_TESTS OFF)
 
 # paths
 set(XRN_TOOLCHAIN_DIR "${CMAKE_SOURCE_DIR}/.toolchain")

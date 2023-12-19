@@ -15,11 +15,11 @@ runProgram() (
 # -------------------------------------------------------------------------------------------------
 
 compiler=clang++
-buildDir=.build
+buildDir=build
 cxxVersion=23
 buildType=Release
 binaryName=$(basename `git rev-parse --show-toplevel`)
-binaryPath=${buildDir}/sources/bin/${binaryName}
+binaryPath=${buildDir}/sources/${binaryName}
 parallel=$(nproc)
 
 # -------------------------------------------------------------------------------------------------
@@ -102,6 +102,7 @@ setupCmake() {
     else
         cmakeCommands+="-DENABLE_BINARY=OFF "
     fi
+    conan install conanfile.txt --build=${buildType}
     cmake \
         -S. \
         -B${buildDir} \
@@ -109,6 +110,7 @@ setupCmake() {
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
         -DXRN_CXX_VERSION=${cxxVersion} \
         -DCMAKE_BUILD_TYPE=${buildType} \
+        -DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=.toolchain/.details/conan_provider.cmake \
         ${cmakeCommands} || exit $?
     ln ${buildDir}/compile_commands.json compile_commands.json
 }
@@ -133,6 +135,7 @@ run() {
 clean() {
     rm -rf ${buildDir}
     rm -f ./compile_commands.json
+    rm -f ./CMakeUserPresets.json
     rm -rf ./.cache
     find -type f -name \*.spv -delete
     find -type f -name vgcore.\* -delete
@@ -144,13 +147,13 @@ runTests() {
 
 runCoverage() {
     if [[ ${CXX} == *"clang++"* ]]; then
-        gcovr -j ${parallel} -b --root ./ ./ -e .build/ -e tests/ -e externals/ --gcov-executable 'llvm-cov gcov'
-        gcovr -j ${parallel} --root ./ ./ -e .build/ -e tests/ -e externals/ --gcov-executable 'llvm-cov gcov'
-        gcovr --delete -j ${parallel} --root ./ ./ -e .build/ -e tests/ -e externals/ --xml-pretty --xml ./.build/coverage.xml --gcov-executable 'llvm-cov gcov'
+        gcovr -j ${parallel} -b --root ./ ./ -e ${buildDir}/ -e tests/ -e externals/ --gcov-executable 'llvm-cov gcov'
+        gcovr -j ${parallel} --root ./ ./ -e ${buildDir}/ -e tests/ -e externals/ --gcov-executable 'llvm-cov gcov'
+        gcovr --delete -j ${parallel} --root ./ ./ -e ${buildDir}/ -e tests/ -e externals/ --xml-pretty --xml ./${buildDir}/coverage.xml --gcov-executable 'llvm-cov gcov'
     else
-        gcovr -j ${parallel} -b --root ./ ./ -e .build/ -e tests/ -e externals/ --gcov-executable 'gcov'
-        gcovr -j ${parallel} --root ./ ./ -e .build/ -e tests/ -e externals/ --gcov-executable 'gcov'
-        gcovr --delete -j ${parallel} --root ./ ./ -e .build/ -e tests/ -e externals/ --xml-pretty --xml ./.build/coverage.xml --gcov-executable 'gcov'
+        gcovr -j ${parallel} -b --root ./ ./ -e ${buildDir}/ -e tests/ -e externals/ --gcov-executable 'gcov'
+        gcovr -j ${parallel} --root ./ ./ -e ${buildDir}/ -e tests/ -e externals/ --gcov-executable 'gcov'
+        gcovr --delete -j ${parallel} --root ./ ./ -e ${buildDir}/ -e tests/ -e externals/ --xml-pretty --xml ./${buildDir}/coverage.xml --gcov-executable 'gcov'
     fi
 }
 

@@ -1,10 +1,3 @@
-if (CMAKE_CURRENT_LIST_DIR MATCHES "-src/sources$")
-    include(${XRN_BUILD_DIR}/_deps/${XRN_BIN_NAME}/conanbuildinfo.cmake)
-else ()
-    include(${XRN_BUILD_DIR}/conanbuildinfo.cmake)
-endif ()
-conan_basic_setup(TARGETS)
-
 include(CMakeFindDependencyMacro)
 foreach(library IN LISTS XRN_LIBRARIES_REQUIREMENTS)
     find_dependency(${library} REQUIRED)
